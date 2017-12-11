@@ -83,10 +83,15 @@ public class DynamicPropertyUpdater implements Runnable {
         // Add previous user-defined properties
         updatedProperties.addAll(userDefinedProperties);
 
+        // Sort properties alphabetically to avoid redeploy if just the order has changed.
+        List<Property> sortedUpdatedProperties = updatedProperties.
+                stream().
+                sorted(Comparator.comparing(Property::getKey)).
+                collect(Collectors.toList());
         // Create properties container
         Properties apiProperties = new Properties();
         try {
-            apiProperties.setProperties(updatedProperties);
+            apiProperties.setProperties(sortedUpdatedProperties);
         } catch (RuntimeException e) {
             logger.error(e.getMessage(), e);
         }
