@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -68,6 +69,9 @@ public class UserResource extends AbstractResource {
 
     @Autowired
     private TaskService taskService;
+
+    @Context
+    private ResourceContext resourceContext;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -156,5 +160,11 @@ public class UserResource extends AbstractResource {
         PagedResult.Page page = pagedResult.new Page(1, tasks.size(), tasks.size(), 1, tasks.size());
         pagedResult.setPage(page);
         return pagedResult;
+    }
+
+
+    @Path("/notifications")
+    public UserNotificationsResource getUserNotificationsResource() {
+        return resourceContext.getResource(UserNotificationsResource.class);
     }
 }
